@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-//import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
-  // await dotenv.load(
-  //     fileName: ".env"); // Load the .env file from the root directory
+  await dotenv.load(
+      fileName: ".env"); // Load the .env file from the root directory
   runApp(const MyApp());
 }
 
@@ -52,15 +52,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void getInformation(double latitude, double longitude) async {
-    // String apiKey = dotenv.env['API_KEY'] ?? ''; // Fetch API key
+    String apiKey = dotenv.env['API_KEY'] ?? ''; // Fetch API key
 
-    // if (apiKey.isEmpty) {
-    //   print("API Key is missing");
-    //   return;
-    // }
+    if (apiKey.isEmpty) {
+      print("API Key is missing");
+      return;
+    }
 
     var url = Uri.parse(
-        "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=fe312a74ff8a3c01d62f44c15379d2da");
+        "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=");
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
