@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'package:weather_app/home.dart';
-
-void main() {
+void main() async {
+  await dotenv.load(
+      fileName: ".env"); // Load the .env file from the root directory
   runApp(const MyApp());
 }
 
@@ -35,6 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double? temperature;
   String? cityName;
   String? weatherDescription;
+  String? weatherIcon;
   int _counter = 0;
 
   void _incrementCounter() async {
@@ -50,8 +52,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void getInformation(double latitude, double longitude) async {
+    String apiKey = dotenv.env['API_KEY'] ?? ''; // Fetch API key
+
+    if (apiKey.isEmpty) {
+      print("API Key is missing");
+      return;
+    }
+
     var url = Uri.parse(
-        "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=fe312a74ff8a3c01d62f44c15379d2da");
+        "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey");
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -62,9 +71,11 @@ class _MyHomePageState extends State<MyHomePage> {
       double temp = decodedData['main']['temp'];
       cityName = decodedData['name'];
       weatherDescription = decodedData['weather'][0]['description'];
+      weatherIcon = decodedData['weather'][0]['icon'];
       print("temperature $temp");
       print("City Name :$cityName:");
-      print(weatherDescription);
+      print(" Weather :$weatherDescription");
+      print("Icon :$weatherIcon");
     } else {
       print(response.statusCode);
     }
