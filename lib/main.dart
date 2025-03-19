@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+//import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
-  await dotenv.load(
-      fileName: ".env"); // Load the .env file from the root directory
+  // await dotenv.load(
+  //     fileName: ".env"); // Load the .env file from the root directory
   runApp(const MyApp());
 }
 
@@ -33,7 +33,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  double? temperature;
+  double? temp;
   String? cityName;
   String? weatherDescription;
   String? weatherIcon;
@@ -52,15 +52,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void getInformation(double latitude, double longitude) async {
-    String apiKey = dotenv.env['API_KEY'] ?? ''; // Fetch API key
+    // String apiKey = dotenv.env['API_KEY'] ?? ''; // Fetch API key
 
-    if (apiKey.isEmpty) {
-      print("API Key is missing");
-      return;
-    }
+    // if (apiKey.isEmpty) {
+    //   print("API Key is missing");
+    //   return;
+    // }
 
     var url = Uri.parse(
-        "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey");
+        "https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=fe312a74ff8a3c01d62f44c15379d2da");
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -117,17 +117,21 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 20,
+            child: Text('Temperature: $temp',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          ),
+          SizedBox(
+            height: 20,
+            child: Text('City Name: $cityName',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          ),
+        ],
+      )),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
